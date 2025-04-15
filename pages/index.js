@@ -1,20 +1,27 @@
 import React, { useEffect, useState } from 'react';
+import { Textarea } from '@/components/ui/textarea';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
+import { Table, TableHead, TableRow, TableCell, TableBody } from '@/components/ui/table';
+
+const AIRTABLE_API_KEY = 'patCOFt5DYSAv73VI.a27ea50b39361b388fe941cd6b562518a08f7943631c2deddd479a8bb1ba6d38';
+const BASE_ID = 'appYPoERDFlNulJgi';
+const TABLE_NAME = 'resumepool';
 
 export default function Home() {
   const [jd, setJd] = useState('');
   const [candidates, setCandidates] = useState([]);
   const [results, setResults] = useState([]);
 
-  const AIRTABLE_API_KEY = 'patCOFt5DYSAv73VI.a27ea50b39361b388fe941cd6b562518a08f7943631c2deddd479a8bb1ba6d38';
-  const BASE_ID = 'appYPoERDFlNulJgi';
-  const TABLE_NAME = 'resumepool';
-
   useEffect(() => {
     fetch(`https://api.airtable.com/v0/${BASE_ID}/${encodeURIComponent(TABLE_NAME)}`, {
-      headers: { Authorization: `Bearer ${AIRTABLE_API_KEY}` }
+      headers: {
+        Authorization: `Bearer ${AIRTABLE_API_KEY}`
+      }
     })
       .then((res) => res.json())
       .then((data) => {
+        if (!data.records) return;
         const parsed = data.records.map((rec) => ({
           name: rec.fields.name || '',
           score: rec.fields.score || 0,
@@ -37,42 +44,54 @@ export default function Home() {
   };
 
   return (
-    <div style={{ padding: 24, fontFamily: 'sans-serif' }}>
-      <h1 style={{ fontSize: 24, fontWeight: 'bold' }}>智能简历匹配系统</h1>
-      <textarea
-        value={jd}
-        onChange={(e) => setJd(e.target.value)}
-        rows="10"
-        placeholder="请输入岗位 JD"
-        style={{ width: '100%', marginTop: 12 }}
-      />
-      <button onClick={handleMatch} style={{ marginTop: 8, padding: 8 }}>
-        ⚡ 开始匹配
-      </button>
-      {results.length > 0 && (
-        <table border="1" cellPadding="6" style={{ marginTop: 20, width: '100%' }}>
-          <thead>
-            <tr>
-              <th>排名</th>
-              <th>候选人</th>
-              <th>匹配分数</th>
-              <th>技能关键词</th>
-              <th>推荐理由</th>
-            </tr>
-          </thead>
-          <tbody>
-            {results.map((r, i) => (
-              <tr key={r.name}>
-                <td>{i + 1}</td>
-                <td>{r.name}</td>
-                <td>{r.finalScore}</td>
-                <td>{r.skills}</td>
-                <td>{r.summary}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      )}
+    <div className="min-h-screen bg-slate-50 p-6">
+      <div className="max-w-5xl mx-auto space-y-8">
+        <h1 className="text-3xl font-bold text-indigo-700">智能简历匹配系统</h1>
+        <Card>
+          <CardContent className="space-y-4 p-6">
+            <label className="text-sm font-medium text-gray-700">请输入岗位 JD：</label>
+            <Textarea
+              className="h-36"
+              placeholder="粘贴你的岗位描述（支持中文和英文关键词）"
+              value={jd}
+              onChange={(e) => setJd(e.target.value)}
+            />
+            <Button onClick={handleMatch} className="w-full">
+              ⚡ 开始匹配
+            </Button>
+          </CardContent>
+        </Card>
+
+        {results.length > 0 && (
+          <Card className="shadow border">
+            <CardContent className="p-6">
+              <h2 className="text-xl font-semibold mb-4">🎯 匹配结果：</h2>
+              <Table className="text-sm">
+                <TableHead>
+                  <TableRow className="bg-slate-100">
+                    <TableCell>排名</TableCell>
+                    <TableCell>候选人</TableCell>
+                    <TableCell>匹配分数</TableCell>
+                    <TableCell>技能关键词</TableCell>
+                    <TableCell>推荐理由</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {results.map((r, i) => (
+                    <TableRow key={r.name} className={i === 0 ? 'bg-green-50' : ''}>
+                      <TableCell>{i + 1}</TableCell>
+                      <TableCell>{r.name}</TableCell>
+                      <TableCell>{r.finalScore.toFixed(1)}</TableCell>
+                      <TableCell>{r.skills}</TableCell>
+                      <TableCell>{r.summary}</TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </CardContent>
+          </Card>
+        )}
+      </div>
     </div>
   );
 }
