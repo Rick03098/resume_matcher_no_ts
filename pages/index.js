@@ -7,7 +7,7 @@ export default function Home() {
 
   const AIRTABLE_API_KEY = 'patHeHHPvRvGPpMUs.ceb12dd3bb28a8e1bee58e6c82b205f8f1627cf7458c1fbb077acfdbaabd5aba';
   const BASE_ID = 'appYPoERDFlNulJgi';
-  const TABLE_NAME = 'resume pool';
+  const TABLE_NAME = 'resumepool';
 
   useEffect(() => {
     fetch(`https://api.airtable.com/v0/${BASE_ID}/${encodeURIComponent(TABLE_NAME)}`, {
