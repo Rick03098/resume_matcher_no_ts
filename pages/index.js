@@ -5,7 +5,7 @@ export default function Home() {
   const [candidates, setCandidates] = useState([]);
   const [results, setResults] = useState([]);
 
-  const AIRTABLE_API_KEY = 'patHeHHPvRvGPpMUs.ceb12dd3bb28a8e1bee58e6c82b205f8f1627cf7458c1fbb077acfdbaabd5aba';
+  const AIRTABLE_API_KEY = 'patTZMLwu79ODAODE.2e17d56502f06f989613b8ef99978c4749ca638be73a4b7b3b019b8a89097a92';
   const BASE_ID = 'appYPoERDFlNulJgi';
   const TABLE_NAME = 'resumepool';
 
