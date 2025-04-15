@@ -109,48 +109,49 @@ export default function Home() {
         text += content.items.map((item) => item.str).join(' ');
       }
       setPdfText(text);
-      alert('PDF 读取完成，简历文本已提取');
+      alert('✅ PDF 简历已读取完成');
     };
     reader.readAsArrayBuffer(file);
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 p-6">
+    <div className="min-h-screen bg-gradient-to-b from-white to-slate-100 p-6">
       <div className="max-w-5xl mx-auto space-y-8">
-        <h1 className="text-3xl font-bold text-indigo-700">智能简历匹配系统</h1>
-        <Card>
-          <CardContent className="space-y-4 p-6">
-            <label className="text-sm font-medium text-gray-700">请输入岗位 JD：</label>
+        <h1 className="text-4xl font-bold text-indigo-700 tracking-tight">📄 智能简历匹配系统</h1>
+        <Card className="shadow-lg">
+          <CardContent className="space-y-6 p-6">
             <Textarea
-              className="h-36"
-              placeholder="粘贴你的岗位描述（支持中文和英文关键词）"
+              className="h-36 text-base border border-gray-300 rounded-md"
+              placeholder="请输入岗位 JD（支持中文/英文），支持关键词提取和推荐理由生成"
               value={jd}
               onChange={(e) => setJd(e.target.value)}
             />
-            <input type="file" accept="application/pdf" onChange={handlePdfUpload} />
-            <Button onClick={handleMatch} className="w-full">
-              ⚡ 开始匹配
-            </Button>
+            <div className="flex items-center gap-4">
+              <input type="file" accept="application/pdf" onChange={handlePdfUpload} className="text-sm" />
+              <Button onClick={handleMatch} className="ml-auto w-40 bg-indigo-600 hover:bg-indigo-700 text-white">
+                ⚡ 开始智能匹配
+              </Button>
+            </div>
           </CardContent>
         </Card>
 
         {results.length > 0 && (
-          <Card className="shadow border">
+          <Card className="shadow-xl">
             <CardContent className="p-6">
-              <h2 className="text-xl font-semibold mb-4">🎯 匹配结果：</h2>
-              <Table className="text-sm">
+              <h2 className="text-xl font-semibold mb-4 text-slate-800">🎯 匹配结果推荐</h2>
+              <Table className="text-sm border rounded-md overflow-hidden">
                 <TableHead>
-                  <TableRow className="bg-slate-100">
-                    <TableCell>排名</TableCell>
-                    <TableCell>候选人</TableCell>
-                    <TableCell>匹配分数</TableCell>
-                    <TableCell>技能关键词</TableCell>
-                    <TableCell>推荐理由（AI生成）</TableCell>
+                  <TableRow className="bg-slate-200 text-slate-700">
+                    <TableCell className="font-bold">排名</TableCell>
+                    <TableCell className="font-bold">候选人</TableCell>
+                    <TableCell className="font-bold">匹配分数</TableCell>
+                    <TableCell className="font-bold">技能关键词</TableCell>
+                    <TableCell className="font-bold">推荐理由（AI 生成）</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
                   {results.map((r, i) => (
-                    <TableRow key={r.name} className={i === 0 ? 'bg-green-50' : ''}>
+                    <TableRow key={r.name} className={i === 0 ? 'bg-green-50' : 'hover:bg-slate-50'}>
                       <TableCell>{i + 1}</TableCell>
                       <TableCell>{r.name}</TableCell>
                       <TableCell>{r.finalScore.toFixed(1)}</TableCell>
